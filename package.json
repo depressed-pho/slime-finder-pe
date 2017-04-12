@@ -1,0 +1,13 @@
+{
+  "name": "slime-finder-pe",
+  "version": "1.0.0",
+  "description": "Web app to locate slime chunks in MCPE",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "PHO <pho@cielonegro.org>",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "typescript": "^2.2.2"
+  }
+}
