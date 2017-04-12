@@ -3,11 +3,19 @@
   "version": "1.0.0",
   "description": "Web app to locate slime chunks in MCPE",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -r ts-node/register test/**/*.ts"
   },
   "author": "PHO <pho@cielonegro.org>",
   "license": "CC0-1.0",
   "devDependencies": {
+    "@types/chai": "^3.5.0",
+    "@types/mocha": "^2.2.40",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "ts-node": "^3.0.2",
     "typescript": "^2.2.2"
+  },
+  "dependencies": {
+    "mersennetwister": "^0.2.3"
   }
 }
