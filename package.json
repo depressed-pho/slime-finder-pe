@@ -17,6 +17,8 @@
     "typescript": "^2.2.2"
   },
   "dependencies": {
+    "@types/big-integer": "0.0.30",
+    "big-integer": "^1.6.19",
     "mersenne-twister": "^1.1.0"
   }
 }

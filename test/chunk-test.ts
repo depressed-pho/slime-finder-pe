@@ -13,4 +13,12 @@ describe('class Chunk', () => {
             new Chunk(-0.1, -16).z.should.equal(-16);
         });
     });
+    describe('isSlimy', () => {
+        it('should return true for a known slime chunk', () => {
+            new Chunk(1728, 48).isSlimy.should.equal(true);
+        });
+        it('should return false for a known non-slime chunk', () => {
+            new Chunk(1728, 64).isSlimy.should.equal(false);
+        });
+    });
 });
