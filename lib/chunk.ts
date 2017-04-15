@@ -14,6 +14,10 @@ export default class Chunk {
 
     /* Return true if it is a slime chunk. */
     get isSlimy(): boolean {
+        /* MCPE slime-chunk checker; reverse engineered by @protolambda and @jocopa3
+         * Ported by PHO from Java code:
+         *   https://gist.github.com/protolambda/00b85bf34a75fd8176342b1ad28bfccc
+         */
         let x_uint    = this.x >>> 0;
         let z_uint    = this.z >>> 0;
         let seed      = bigInt(x_uint).multiply(0x1f1f1f1f).xor(z_uint).and(0xffffffff).valueOf();
