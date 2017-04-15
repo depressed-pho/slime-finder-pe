@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Slime Finder PE</title>
+    <script src="main.bundle.js"></script>
+  </head>
+  <body>
+    <div class="page-header">
+      <h1>Slime Finder PE</h1>
+    </div>
+    <div class="container">
+
+      <table class="table">
+        <tbody>
+          <tr>
+            <th class="text-right">Coordinates</th>
+            <td>
+              <form class="form-inline">
+                <div class="form-group">
+                  <label for="position-x">X</label>
+                  <input type="number" class="form-control" id="position-x" step="any" size="6" />
+                </div>
+                <div class="form-group">
+                  <label for="position-z">Z</label>
+                  <input type="number" class="form-control" id="position-z" step="any" size="6" />
+                </div>
+              </form>
+            </td>
+          </tr>
+          <tr>
+            <th class="text-right">Chunk</th>
+            <td>
+              From <span id="chunk-from-x" />, <span id="chunk-from-z" />
+              to <span id="chunk-to-x" />, <span id="chunk-to-z" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </body>
+</html>

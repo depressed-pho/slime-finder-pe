@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Web app to locate slime chunks in MCPE",
   "scripts": {
+    "build": "run-p webpack copy:html",
+    "webpack": "webpack",
+    "copy:html": "cpx html/**/*.html dist",
+    "clean": "rimraf dist",
     "test": "mocha --compilers ts:ts-node/register -r tsconfig-paths/register -r ts-node/register test/**/*.ts"
   },
   "author": "PHO <pho@cielonegro.org>",
@@ -10,15 +14,31 @@
   "devDependencies": {
     "@types/chai": "^3.5.0",
     "@types/mocha": "^2.2.40",
+    "bootstrap-loader": "^2.0.0",
     "chai": "^3.5.0",
+    "cpx": "^1.5.0",
+    "css-loader": "^0.28.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "file-loader": "^0.11.1",
     "mocha": "^3.2.0",
+    "node-sass": "^4.5.2",
+    "npm-run-all": "^4.0.2",
+    "resolve-url-loader": "^2.0.2",
+    "rimraf": "^2.6.1",
+    "sass-loader": "^6.0.3",
+    "ts-loader": "^2.0.3",
     "ts-node": "^3.0.2",
     "tsconfig-paths": "^2.1.2",
-    "typescript": "^2.2.2"
+    "typescript": "^2.2.2",
+    "url-loader": "^0.5.8",
+    "webpack": "^2.4.1"
   },
   "dependencies": {
     "@types/big-integer": "0.0.30",
     "big-integer": "^1.6.19",
-    "mersenne-twister": "^1.1.0"
+    "bootstrap-sass": "^3.3.7",
+    "imports-loader": "^0.7.1",
+    "mersenne-twister": "^1.1.0",
+    "style-loader": "^0.16.1"
   }
 }

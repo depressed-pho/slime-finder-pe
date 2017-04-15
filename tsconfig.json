@@ -8,6 +8,9 @@
             "slime-finder/*": [
                 "lib/*"
             ]
-        }
+        },
+        "alwaysStrict": true,
+        "strictNullChecks": true,
+        "target": "ES5"
     }
 }
