@@ -14476,7 +14476,7 @@ var AtlasView = (function () {
                     if (p0) {
                         var p1 = new point_1.default(dr.x, dr.y);
                         var d = p1.distance(p0);
-                        if (d > 0) {
+                        if (d > 1) {
                             var dx_1 = p1.x - p0.x;
                             var dz_1 = p1.z - p0.z;
                             var ax_1 = _this.canvas.width / $(_this.canvas).width();
