@@ -1,3 +1,4 @@
+import '../../scss/atlas.scss';
 import $ = require('jquery');
 import Bacon = require('baconjs');
 import AtlasModel  from '../model/atlas';
@@ -53,17 +54,30 @@ export default class AtlasView {
                     (p.x - topLeft.x) * scale,
                     (p.z - topLeft.z) * scale);
             };
-            ctx.strokeStyle = 'black';
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
             ctx.fillStyle   = 'rgba(127, 255, 0, 0.4)';
+            ctx.lineWidth   = 1.0;
             for (let c = new Chunk(topLeft); isChunkVisible(c); c = c.offset(0, 1)) {
                 for (let d = c; isChunkVisible(d); d = d.offset(1, 0)) {
                     const origin = worldToAtlas(d.origin);
-                    ctx.strokeRect(origin.x, origin.z, 16 * scale, 16 * scale);
+                    ctx.strokeRect(
+                        Math.floor(origin.x), Math.floor(origin.z), 16 * scale, 16 * scale);
                     if (d.isSlimy) {
-                        ctx.fillRect(origin.x, origin.z, 16 * scale, 16 * scale);
+                        ctx.fillRect(
+                            Math.floor(origin.x), Math.floor(origin.z), 16 * scale, 16 * scale);
                     }
                 }
             }
+
+            /* Draw a small circle at the center of atlas.
+             */
+            ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+            ctx.lineWidth   = 3.0;
+            ctx.beginPath();
+            ctx.arc(
+                Math.floor(worldToAtlas(center).x), Math.floor(worldToAtlas(center).z),
+                4.0, 0, 2 * Math.PI);
+            ctx.stroke();
         }
     }
 
@@ -74,13 +88,71 @@ export default class AtlasView {
         this.center = atlas.center;
         this.scale  = atlas.scale;
 
-        this.canvas = <HTMLCanvasElement>$("#atlas").get(0);
-
-        /* The content of atlas is determined by the center and the
-         * scale. Redraw it whenever either of them changes.
+        /* Resize the canvas according to its container.
          */
-        Bacon.combineAsArray<any, Point|number>(this.center, this.scale).onValues((c, s) => {
-            this.redraw(c, s);
+        this.canvas = <HTMLCanvasElement>$('#atlas').get(0);
+
+        /* When the size of window changes the canvas should be
+         * resized accordingly.
+         */
+        let getSize = () => {
+            return {w: $(window).width(), h: $(window).height()};
+        };
+        let size = $(window).asEventStream('resize')
+            .throttle(50).map(getSize)
+            .merge(Bacon.once(getSize()));
+
+        /* The content of atlas is determined by the center, scale,
+         * and size. Redraw it whenever either of them changes.
+         */
+        Bacon.combineAsArray<any, any>(this.center, this.scale, size).onValues(
+            (c, sc, sz) => {
+                this.canvas.width  = sz.w;
+                this.canvas.height = Math.floor(sz.h * (50 / 100));
+
+                this.redraw(c, sc);
+            });
+
+        /* Users can drag the atlas to scroll it. */
+        let mouseDown  = $(this.canvas).asEventStream('mousedown').map((e) => {
+            return {ev: 'start', x: e.pageX, y: e.pageY};
+        });
+        let mouseMove  = $(this.canvas).asEventStream('mousemove').throttle(10).map((e) => {
+            return {ev: 'move', x: e.pageX, y: e.pageY};
+        });
+        let mouseUp    = $(this.canvas).asEventStream('mouseup').map((e) => {
+            return {ev: 'stop', x: e.pageX, y: e.pageY};
+        });
+        let drag       = mouseDown.merge(mouseMove).merge(mouseUp);
+
+        let p0: Point | null = null;
+        Bacon.combineAsArray<any, any>(this.scale, drag).onValues((scale, dr) => {
+            switch (dr.ev) {
+            case 'start':
+                p0 = new Point(dr.x, dr.y);
+                break;
+
+            case 'move':
+                if (p0) {
+                    let p1 = new Point(dr.x, dr.y);
+                    let d  = p1.distance(p0);
+                    if (d > 0) {
+                        let dx = p1.x - p0.x;
+                        let dz = p1.z - p0.z;
+                        let ax = this.canvas.width  / $(this.canvas).width();
+                        let az = this.canvas.height / $(this.canvas).height();
+                        atlas.centerChanges.push((c0) => {
+                            return c0.offset(-dx * ax / scale, -dz * az / scale).floor();
+                        });
+                        p0 = p1;
+                    }
+                }
+                break;
+
+            case 'stop':
+                p0 = null;
+                break;
+            }
         });
     }
 }

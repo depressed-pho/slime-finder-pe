@@ -21,11 +21,19 @@ module.exports = {
                 loader: 'imports-loader?jQuery=jquery'
             },
             {
-                test: /Bacon\.js/,
+                test: /Bacon\.js$/,
                 loader: 'imports-loader?jQuery=jquery'
             },
             { test: /\.(woff2?|svg)$/, loader: 'url-loader?limit=10000' },
-            { test: /\.(ttf|eot)$/   , loader: 'file-loader' }
+            { test: /\.(ttf|eot)$/   , loader: 'file-loader' },
+            {
+                test: /\.scss$/,
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader'   },
+                    { loader: 'sass-loader'  }
+                ]
+            }
         ]
     }
 };

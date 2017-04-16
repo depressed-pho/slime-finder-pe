@@ -6,11 +6,13 @@
     "build": "run-p webpack copy:html",
     "webpack": "webpack",
     "copy:html": "cpx html/**/*.html dist",
+    "watch:html": "cpx --watch html/**/*.html dist",
     "clean": "rimraf dist",
     "test": "mocha --compilers ts:ts-node/register -r tsconfig-paths/register -r ts-node/register test/**/*.ts",
     "deploy": "run-s build deploy:gh-pages",
     "deploy:gh-pages": "gh-pages -d dist",
-    "start": "webpack-dev-server --content-base dist"
+    "start": "run-p watch:html server",
+    "server": "webpack-dev-server --content-base dist"
   },
   "author": "PHO <pho@cielonegro.org>",
   "license": "CC0-1.0",

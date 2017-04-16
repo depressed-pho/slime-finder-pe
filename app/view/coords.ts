@@ -6,7 +6,7 @@ import Chunk from 'slime-finder/chunk';
 import CoordsModel from '../model/coords';
 
 export default class CoordsView {
-    protected readonly changes: Bacon.EventStream<any, Point>;
+    protected readonly changes: Bacon.EventStream<any, (p: Point) => Point>;
     protected readonly chunk: Bacon.Observable<any, Chunk>;
 
     constructor(coords: CoordsModel) {
@@ -17,8 +17,10 @@ export default class CoordsView {
             return new Point(
                 Number($('#position-x').val()),
                 Number($('#position-z').val()));
-        }).skipDuplicates(_.isEqual);
-        coords.changed.plug(this.changes);
+        }).skipDuplicates(_.isEqual).map((p) => {
+            return () => { return p };
+        });
+        coords.changes.plug(this.changes);
 
         /* The value of coords.prop property should be shown in the
          * input forms.
