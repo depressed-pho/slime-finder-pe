@@ -128,13 +128,13 @@ export default class AtlasView {
 
         /* Users can drag the atlas to scroll it. */
         let mouseDown  = $(this.canvas).asEventStream('mousedown').map((e) => {
-            return {ev: 'start', x: e.pageX, y: e.pageY};
+            return {ev: 'start', x: e.clientX, y: e.clientY};
         });
         let mouseMove  = $(this.canvas).asEventStream('mousemove').throttle(10).map((e) => {
-            return {ev: 'move', x: e.pageX, y: e.pageY};
+            return {ev: 'move', x: e.clientX, y: e.clientY};
         });
         let mouseUp    = $(this.canvas).asEventStream('mouseup').map((e) => {
-            return {ev: 'stop', x: e.pageX, y: e.pageY};
+            return {ev: 'stop', x: e.clientX, y: e.clientY};
         });
         let drag       = mouseDown.merge(mouseMove).merge(mouseUp);
 
