@@ -1,32 +1,45 @@
 import $ = require('jquery');
-import { Point } from '../model/coords';
-import * as Model from '../model/coords';
+import _ = require('underscore');
+import Bacon = require('baconjs');
+import Point from 'slime-finder/point';
 import Chunk from 'slime-finder/chunk';
+import CoordsModel from '../model/coords';
 
-export class Coords {
-    constructor(coords: Model.Coords) {
-        let changes = $('#position-x, #position-z').asEventStream('input').map(() => {
-            return <Point>{
-                x: $('#position-x').val(),
-                z: $('#position-z').val()
-            };
-        });
-        coords.changed.plug(changes);
+export default class CoordsView {
+    protected readonly changes: Bacon.EventStream<any, Point>;
+    protected readonly chunk: Bacon.Observable<any, Chunk>;
 
+    constructor(coords: CoordsModel) {
+        /* Whenever users directly change the value of input forms its
+         * change should be propagated to the coords.changed bus.
+         */
+        this.changes = $('#position-x, #position-z').asEventStream('input').map((): Point => {
+            return new Point(
+                Number($('#position-x').val()),
+                Number($('#position-z').val()));
+        }).skipDuplicates(_.isEqual);
+        coords.changed.plug(this.changes);
+
+        /* The value of coords.prop property should be shown in the
+         * input forms.
+         */
         coords.prop.onValue((p: Point) => {
             $('#position-x').val(p.x);
             $('#position-z').val(p.z);
         });
 
-        let chunk = coords.prop.map((p: Point) => {
-            return new Chunk(p.x, p.z);
+        /* And the chunk position on the screen should also depend on
+         * the coords.prop property.
+         */
+        this.chunk = coords.prop.map((p: Point) => {
+            return new Chunk(p);
         });
-        chunk.onValue((c) => {
-            $('#chunk-from-x').text(c.x);
-            $('#chunk-from-z').text(c.z);
+        this.chunk.onValue((c) => {
+            $('#chunk-from-x').text(c.origin.x);
+            $('#chunk-from-z').text(c.origin.z);
 
-            $('#chunk-to-x').text(c.x + 15);
-            $('#chunk-to-z').text(c.z + 15);
+            $('#chunk-to-x').text(c.origin.x + 15);
+            $('#chunk-to-z').text(c.origin.z + 15);
 
             if (c.isSlimy) {
                 $('#chunk-is-slimy').fadeIn(50);

@@ -9,7 +9,8 @@
     "clean": "rimraf dist",
     "test": "mocha --compilers ts:ts-node/register -r tsconfig-paths/register -r ts-node/register test/**/*.ts",
     "deploy": "run-s build deploy:gh-pages",
-    "deploy:gh-pages": "gh-pages -d dist"
+    "deploy:gh-pages": "gh-pages -d dist",
+    "start": "webpack-dev-server --content-base dist"
   },
   "author": "PHO <pho@cielonegro.org>",
   "license": "CC0-1.0",
@@ -34,16 +35,19 @@
     "tsconfig-paths": "^2.1.2",
     "typescript": "^2.2.2",
     "url-loader": "^0.5.8",
-    "webpack": "^2.4.1"
+    "webpack": "^2.4.1",
+    "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
     "@types/baconjs": "^0.7.31",
     "@types/big-integer": "0.0.30",
+    "@types/underscore": "^1.8.0",
     "baconjs": "^0.7.92",
     "big-integer": "^1.6.19",
     "bootstrap-sass": "^3.3.7",
     "imports-loader": "^0.7.1",
     "mersenne-twister": "^1.1.0",
-    "style-loader": "^0.16.1"
+    "style-loader": "^0.16.1",
+    "underscore": "^1.8.3"
   }
 }

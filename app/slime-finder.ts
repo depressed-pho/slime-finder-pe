@@ -1,16 +1,18 @@
 import 'bootstrap-loader';
-//import 'jquery';
-//import 'imports-loader?jQuery=jquery!bootstrap';
-//import 'bootstrap/dist/css/bootstrap.min.css';
-
-//import Chunk from 'slime-finder/chunk';
-//import require = require('webpack.d.ts');
-
-import * as Model from './model/coords';
-import * as View  from './view/coords';
+import AtlasModel  from './model/atlas';
+import CoordsModel from './model/coords';
+import AtlasView   from './view/atlas';
+import CoordsView  from './view/coords';
+import Point       from 'slime-finder/point';
 import $ = require('jquery');
 
 $(() => {
-    let coordsModel = new Model.Coords({x: 1728, z: 48});
-    let coordsView  = new View.Coords(coordsModel);
+    const initialCoords = new Point(1728, 48);
+    const initialScale  = 5.0;
+
+    const coordsModel   = new CoordsModel(initialCoords);
+    const coordsView    = new CoordsView(coordsModel);
+
+    const atlasModel    = new AtlasModel(coordsModel, initialScale);
+    const atlasView     = new AtlasView(atlasModel);
 });
