@@ -149,7 +149,7 @@ export default class AtlasView {
                 if (p0) {
                     let p1 = new Point(dr.x, dr.y);
                     let d  = p1.distance(p0);
-                    if (d > 0) {
+                    if (d > 1) {
                         let dx = p1.x - p0.x;
                         let dz = p1.z - p0.z;
                         let ax = this.canvas.width  / $(this.canvas).width();
