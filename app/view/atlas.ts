@@ -130,22 +130,22 @@ export default class AtlasView {
         let mouseDown  = $(this.canvas).asEventStream('mousedown').map((e) => {
             e.preventDefault();
             e.stopPropagation();
-            return {ev: 'start', x: e.clientX, y: e.clientY};
+            return {ev: 'start', x: e.pageX, y: e.pageY};
         });
         let mouseMove  = $(this.canvas).asEventStream('mousemove').throttle(10).map((e) => {
             e.preventDefault();
             e.stopPropagation();
-            return {ev: 'move', x: e.clientX, y: e.clientY};
+            return {ev: 'move', x: e.pageX, y: e.pageY};
         });
         let mouseUp    = $(this.canvas).asEventStream('mouseup').map((e) => {
             e.preventDefault();
             e.stopPropagation();
-            return {ev: 'stop', x: e.clientX, y: e.clientY};
+            return {ev: 'stop', x: e.pageX, y: e.pageY};
         });
-        let drag       = mouseDown.merge(mouseMove).merge(mouseUp);
+        let mouseDrag  = mouseDown.merge(mouseMove).merge(mouseUp);
 
         let p0: Point | null = null;
-        Bacon.combineAsArray<any, any>(this.scale, drag).onValues((scale, dr) => {
+        Bacon.combineAsArray<any, any>(this.scale, mouseDrag).onValues((scale, dr) => {
             switch (dr.ev) {
             case 'start':
                 p0 = new Point(dr.x, dr.y);
