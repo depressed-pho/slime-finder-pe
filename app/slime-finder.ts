@@ -1,4 +1,5 @@
 import 'bootstrap-loader';
+import '../scss/app.scss';
 import AtlasModel  from './model/atlas';
 import CoordsModel from './model/coords';
 import AtlasView   from './view/atlas';

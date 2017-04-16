@@ -11,8 +11,8 @@ export default class Point {
         return new Point(this.x + x, this.z + z);
     }
 
-    floor(): Point {
-        return new Point(Math.floor(this.x), Math.floor(this.z));
+    round(): Point {
+        return new Point(Math.round(this.x), Math.round(this.z));
     }
 
     distance(p1: Point): number {

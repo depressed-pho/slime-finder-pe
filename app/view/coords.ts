@@ -1,5 +1,4 @@
 import $ = require('jquery');
-import _ = require('underscore');
 import Bacon = require('baconjs');
 import Point from 'slime-finder/point';
 import Chunk from 'slime-finder/chunk';
@@ -13,12 +12,10 @@ export default class CoordsView {
         /* Whenever users directly change the value of input forms its
          * change should be propagated to the coords.changed bus.
          */
-        this.changes = $('#position-x, #position-z').asEventStream('input').map((): Point => {
-            return new Point(
+        this.changes = $('#position-x, #position-z').asEventStream('input').map(() => {
+            return () => new Point(
                 Number($('#position-x').val()),
                 Number($('#position-z').val()));
-        }).skipDuplicates(_.isEqual).map((p) => {
-            return () => { return p };
         });
         coords.changes.plug(this.changes);
 

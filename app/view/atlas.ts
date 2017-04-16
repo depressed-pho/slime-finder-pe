@@ -113,6 +113,19 @@ export default class AtlasView {
                 this.redraw(c, sc);
             });
 
+        /* Users can use their mouse wheel to change the scale. */
+        $(this.canvas).asEventStream('wheel').onValue((e) => {
+            e.preventDefault();
+            atlas.scaleChanges.push((s0) => {
+                if ((<WheelEvent>e.originalEvent).deltaY > 0) {
+                    return s0 + 0.5;
+                }
+                else {
+                    return Math.max(s0 - 0.5, 1);
+                }
+            });
+        });
+
         /* Users can drag the atlas to scroll it. */
         let mouseDown  = $(this.canvas).asEventStream('mousedown').map((e) => {
             return {ev: 'start', x: e.pageX, y: e.pageY};
@@ -142,7 +155,7 @@ export default class AtlasView {
                         let ax = this.canvas.width  / $(this.canvas).width();
                         let az = this.canvas.height / $(this.canvas).height();
                         atlas.centerChanges.push((c0) => {
-                            return c0.offset(-dx * ax / scale, -dz * az / scale).floor();
+                            return c0.offset(-dx * ax / scale, -dz * az / scale).round();
                         });
                         p0 = p1;
                     }
