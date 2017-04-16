@@ -14457,13 +14457,13 @@ var AtlasView = (function () {
         });
         /* Users can drag the atlas to scroll it. */
         var mouseDown = $(this.canvas).asEventStream('mousedown').map(function (e) {
-            return { ev: 'start', x: e.pageX, y: e.pageY };
+            return { ev: 'start', x: e.clientX, y: e.clientY };
         });
         var mouseMove = $(this.canvas).asEventStream('mousemove').throttle(10).map(function (e) {
-            return { ev: 'move', x: e.pageX, y: e.pageY };
+            return { ev: 'move', x: e.clientX, y: e.clientY };
         });
         var mouseUp = $(this.canvas).asEventStream('mouseup').map(function (e) {
-            return { ev: 'stop', x: e.pageX, y: e.pageY };
+            return { ev: 'stop', x: e.clientX, y: e.clientY };
         });
         var drag = mouseDown.merge(mouseMove).merge(mouseUp);
         var p0 = null;
