@@ -2,6 +2,10 @@
   "name": "slime-finder-pe",
   "version": "1.0.0",
   "description": "Web app to locate slime chunks in MCPE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/depressed-pho/slime-finder-pe.git"
+  },
   "scripts": {
     "build": "run-p webpack copy:html",
     "webpack": "webpack",
