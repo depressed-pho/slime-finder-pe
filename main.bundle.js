@@ -17811,7 +17811,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "canvas#atlas {\n  width: 100%;\n  height: auto; }\n", ""]);
+exports.push([module.i, "canvas#atlas {\n  width: 100%;\n  height: auto;\n  cursor: move; }\n", ""]);
 
 // exports
 
