@@ -1,4 +1,5 @@
 var path = require('path');
+var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     entry: './app/slime-finder.ts',
@@ -13,6 +14,11 @@ module.exports = {
             'slime-finder': path.resolve(__dirname, 'lib')
         }
     },
+    plugins: [
+        new UglifyJSPlugin({
+            sourceMap: true
+        })
+    ],
     module: {
         rules: [
             { test: /\.tsx?$/, loader: 'ts-loader' },

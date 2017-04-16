@@ -40,6 +40,8 @@
     "ts-node": "^3.0.2",
     "tsconfig-paths": "^2.1.2",
     "typescript": "^2.2.2",
+    "uglify-js": "^2.8.22",
+    "uglifyjs-webpack-plugin": "^0.4.3",
     "url-loader": "^0.5.8",
     "webpack": "^2.4.1",
     "webpack-dev-server": "^2.4.2"
