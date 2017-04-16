@@ -14459,21 +14459,21 @@ var AtlasView = (function () {
         var mouseDown = $(this.canvas).asEventStream('mousedown').map(function (e) {
             e.preventDefault();
             e.stopPropagation();
-            return { ev: 'start', x: e.clientX, y: e.clientY };
+            return { ev: 'start', x: e.pageX, y: e.pageY };
         });
         var mouseMove = $(this.canvas).asEventStream('mousemove').throttle(10).map(function (e) {
             e.preventDefault();
             e.stopPropagation();
-            return { ev: 'move', x: e.clientX, y: e.clientY };
+            return { ev: 'move', x: e.pageX, y: e.pageY };
         });
         var mouseUp = $(this.canvas).asEventStream('mouseup').map(function (e) {
             e.preventDefault();
             e.stopPropagation();
-            return { ev: 'stop', x: e.clientX, y: e.clientY };
+            return { ev: 'stop', x: e.pageX, y: e.pageY };
         });
-        var drag = mouseDown.merge(mouseMove).merge(mouseUp);
+        var mouseDrag = mouseDown.merge(mouseMove).merge(mouseUp);
         var p0 = null;
-        Bacon.combineAsArray(this.scale, drag).onValues(function (scale, dr) {
+        Bacon.combineAsArray(this.scale, mouseDrag).onValues(function (scale, dr) {
             switch (dr.ev) {
                 case 'start':
                     p0 = new point_1.default(dr.x, dr.y);
