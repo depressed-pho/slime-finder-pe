@@ -26,8 +26,8 @@ export default class Chunk {
          * Ported by PHO from Java code:
          *   https://gist.github.com/protolambda/00b85bf34a75fd8176342b1ad28bfccc
          */
-        let x_uint    = this.origin.x >>> 0;
-        let z_uint    = this.origin.z >>> 0;
+        let x_uint    = (this.origin.x / 16) >>> 0;
+        let z_uint    = (this.origin.z / 16) >>> 0;
         let seed      = bigInt(x_uint).multiply(0x1f1f1f1f).xor(z_uint).and(0xffffffff).valueOf();
         let mt        = new MersenneTwister(seed);
         let n         = bigInt(mt.random_int());
