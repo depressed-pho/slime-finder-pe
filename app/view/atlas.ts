@@ -125,17 +125,50 @@ export default class AtlasView {
         });
 
         /* Users can pinch or use their mouse wheel to change the scale. */
-        $(this.canvas).asEventStream('wheel').onValue((e) => {
-            e.preventDefault();
-            atlas.scaleChanges.push((s0) => {
-                if ((<WheelEvent>e.originalEvent).deltaY > 0) {
-                    return s0 + 0.5;
-                }
-                else {
-                    return Math.max(s0 - 0.5, 1);
-                }
+        let wheelScale = $(this.canvas)
+            .asEventStream('wheel')
+            .doAction('.preventDefault')
+            .debounceImmediate(10)
+            .map((e) => {
+                return (s0) => {
+                    if ((<WheelEvent>e.originalEvent).deltaY > 0) {
+                        return s0 + 0.5;
+                    }
+                    else {
+                        return Math.max(s0 - 0.5, 1.0);
+                    }
+                };
             });
-        });
+        atlas.scaleChanges.plug(wheelScale);
+
+        let pinchStart = $(this.canvas).asEventStream('pinchstart').doAction('.preventDefault');
+        let pinchMove  = $(this.canvas).asEventStream('pinch').doAction('.preventDefault').debounceImmediate(50);
+        let pinchEnd   = $(this.canvas).asEventStream('pinchend pinchcancel').doAction('.preventDefault');
+        let pinch      = pinchStart.merge(pinchMove).merge(pinchEnd);
+        let pinchScale = Bacon.combineAsArray<any, any>(this.scale, pinch)
+            .withStateMachine(null, (s0: number | null, ev: Bacon.Event<any>) => {
+                if (ev.hasValue()) {
+                    let [s, jqEvent] = <[number, any]>ev.value();
+                    let domEvent = jqEvent.originalEvent;
+                    let hmEvent  = domEvent.gesture;
+                    switch (domEvent.type) {
+                    case 'pinchstart':
+                        return [s, []];
+
+                    case 'pinch':
+                        if (s0) {
+                            let ds = hmEvent.scale;
+                            let s1 = Math.max(Math.round(s0 * ds * 2) / 2, 1.0);
+                            return [s0, [new Bacon.Next(s1)]];
+                        }
+                    }
+                }
+                return [null, []];
+            })
+            .map((s: number) => {
+                return () => s;
+            });
+        atlas.scaleChanges.plug(pinchScale);
 
         /* Users can drag the atlas to scroll it. */
         let panStart = $(this.canvas).asEventStream('panstart').doAction('.preventDefault');
@@ -147,7 +180,7 @@ export default class AtlasView {
                 if (ev.hasValue()) {
                     let [scale, c, jqEvent] = <[number, Point, any]>ev.value();
                     let domEvent = jqEvent.originalEvent;
-                    let hmEvent  = jqEvent.originalEvent.gesture;
+                    let hmEvent  = domEvent.gesture;
                     switch (domEvent.type) {
                     case 'panstart':
                         return [c, []];
@@ -161,14 +194,11 @@ export default class AtlasView {
                             let c1 = c0.offset(dx, dz).round();
                             return [c0, [new Bacon.Next(c1)]];
                         }
-                        else {
-                            return [null, []];
-                        }
                     }
                 }
                 return [null, []];
             })
-            .map((c) => {
+            .map((c: Point) => {
                 return () => c;
             });
         atlas.centerChanges.plug(centerChanges);

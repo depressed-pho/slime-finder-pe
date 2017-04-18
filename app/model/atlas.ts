@@ -24,6 +24,6 @@ export default class AtlasModel {
         this.scaleChanges = new Bacon.Bus<any, (s: number) => number>();
         this.scale        = this.scaleChanges.scan(initialScale, (s0, f) => {
             return f(s0);
-        });
+        }).skipDuplicates();
     }
 }
