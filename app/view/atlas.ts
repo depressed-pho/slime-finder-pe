@@ -1,6 +1,7 @@
 import '../../scss/atlas.scss';
-import $ = require('jquery');
-import Bacon = require('baconjs');
+import $      = require('jquery');
+import Bacon  = require('baconjs');
+import Hammer = require('hammerjs');
 import AtlasModel  from '../model/atlas';
 import CoordsModel from '../model/coords';
 import Chunk       from 'slime-finder/chunk';
@@ -113,7 +114,17 @@ export default class AtlasView {
                 this.redraw(c, sc);
             });
 
-        /* Users can use their mouse wheel to change the scale. */
+        /* Configurations for mouse and touch devices.
+         */
+        let hm = new Hammer.Manager(this.canvas, {
+            domEvents: true,
+            recognizers: [
+                [Hammer.Pan],
+                [Hammer.Pinch]
+            ]
+        });
+
+        /* Users can pinch or use their mouse wheel to change the scale. */
         $(this.canvas).asEventStream('wheel').onValue((e) => {
             e.preventDefault();
             atlas.scaleChanges.push((s0) => {
@@ -127,51 +138,39 @@ export default class AtlasView {
         });
 
         /* Users can drag the atlas to scroll it. */
-        let mouseDown  = $(this.canvas).asEventStream('mousedown').map((e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            return {ev: 'start', x: e.pageX, y: e.pageY};
-        });
-        let mouseMove  = $(this.canvas).asEventStream('mousemove').throttle(10).map((e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            return {ev: 'move', x: e.pageX, y: e.pageY};
-        });
-        let mouseUp    = $(this.canvas).asEventStream('mouseup').map((e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            return {ev: 'stop', x: e.pageX, y: e.pageY};
-        });
-        let mouseDrag  = mouseDown.merge(mouseMove).merge(mouseUp);
+        let panStart = $(this.canvas).asEventStream('panstart').doAction('.preventDefault');
+        let panMove  = $(this.canvas).asEventStream('pan').doAction('.preventDefault').debounceImmediate(10);
+        let panEnd   = $(this.canvas).asEventStream('panend pancancel').doAction('.preventDefault');
+        let pan      = panStart.merge(panMove).merge(panEnd);
+        let centerChanges = Bacon.combineAsArray<any, any>(this.scale, this.center, pan)
+            .withStateMachine(null, (c0: Point | null, ev: Bacon.Event<any>) => {
+                if (ev.hasValue()) {
+                    let [scale, c, jqEvent] = <[number, Point, any]>ev.value();
+                    let domEvent = jqEvent.originalEvent;
+                    let hmEvent  = jqEvent.originalEvent.gesture;
+                    switch (domEvent.type) {
+                    case 'panstart':
+                        return [c, []];
 
-        let p0: Point | null = null;
-        Bacon.combineAsArray<any, any>(this.scale, mouseDrag).onValues((scale, dr) => {
-            switch (dr.ev) {
-            case 'start':
-                p0 = new Point(dr.x, dr.y);
-                break;
-
-            case 'move':
-                if (p0) {
-                    let p1 = new Point(dr.x, dr.y);
-                    let d  = p1.distance(p0);
-                    if (d > 1) {
-                        let dx = p1.x - p0.x;
-                        let dz = p1.z - p0.z;
-                        let ax = this.canvas.width  / $(this.canvas).width();
-                        let az = this.canvas.height / $(this.canvas).height();
-                        atlas.centerChanges.push((c0) => {
-                            return c0.offset(-dx * ax / scale, -dz * az / scale).round();
-                        });
-                        p0 = p1;
+                    case 'pan':
+                        if (c0) {
+                            let ax = this.canvas.width  / $(this.canvas).width();
+                            let az = this.canvas.height / $(this.canvas).height();
+                            let dx = -hmEvent.deltaX * ax / scale;
+                            let dz = -hmEvent.deltaY * az / scale;
+                            let c1 = c0.offset(dx, dz).round();
+                            return [c0, [new Bacon.Next(c1)]];
+                        }
+                        else {
+                            return [null, []];
+                        }
                     }
                 }
-                break;
-
-            case 'stop':
-                p0 = null;
-                break;
-            }
-        });
+                return [null, []];
+            })
+            .map((c) => {
+                return () => c;
+            });
+        atlas.centerChanges.plug(centerChanges);
     }
 }

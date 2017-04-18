@@ -21,8 +21,12 @@
   "author": "PHO <pho@cielonegro.org>",
   "license": "CC0-1.0",
   "devDependencies": {
+    "@types/baconjs": "^0.7.31",
+    "@types/big-integer": "0.0.30",
     "@types/chai": "^3.5.0",
+    "@types/hammerjs": "^2.0.34",
     "@types/mocha": "^2.2.40",
+    "@types/underscore": "^1.8.0",
     "bootstrap-loader": "^2.0.0",
     "chai": "^3.5.0",
     "cpx": "^1.5.0",
@@ -30,12 +34,14 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.11.1",
     "gh-pages": "^0.12.0",
+    "imports-loader": "^0.7.1",
     "mocha": "^3.2.0",
     "node-sass": "^4.5.2",
     "npm-run-all": "^4.0.2",
     "resolve-url-loader": "^2.0.2",
     "rimraf": "^2.6.1",
     "sass-loader": "^6.0.3",
+    "style-loader": "^0.16.1",
     "ts-loader": "^2.0.3",
     "ts-node": "^3.0.2",
     "tsconfig-paths": "^2.1.2",
@@ -47,15 +53,11 @@
     "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
-    "@types/baconjs": "^0.7.31",
-    "@types/big-integer": "0.0.30",
-    "@types/underscore": "^1.8.0",
     "baconjs": "^0.7.92",
     "big-integer": "^1.6.19",
     "bootstrap-sass": "^3.3.7",
-    "imports-loader": "^0.7.1",
+    "hammerjs": "^2.0.8",
     "mersenne-twister": "^1.1.0",
-    "style-loader": "^0.16.1",
     "underscore": "^1.8.3"
   }
 }
