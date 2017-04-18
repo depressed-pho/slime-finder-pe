@@ -80,35 +80,69 @@
         </tbody>
       </table>
 
-      <div class="panel panel-default" id="panel-changes">
-        <div class="panel-heading" id="heading-changes">
-          <h3 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#panel-changes" href="#changes"
-               aria-expanded="false" aria-controls="changes">
-              Changes <small>(click to show)</small>
-            </a>
-          </h3>
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="heading-changes">
+            <h3 class="panel-title">
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#changes"
+                 aria-expanded="false" aria-controls="changes">
+                Changes <small>(click to show)</small>
+              </a>
+            </h3>
+          </div>
+          <div id="changes" class="panel-collapse collapse" role="tabpanel"
+               aria-labelledby="heading-changes">
+            <div class="panel-body">
+              <dl class="dl-horizontal">
+                <dt>2017-04-18</dt>
+                <dd>
+                  New feature: the app now supports touch devices to
+                  scroll and scale the map, suggested by <a
+                  href="https://www.reddit.com/r/MCPE/comments/65te43/made_a_slime_chunk_finder_for_pe_have_fun/">several
+                  Redditters</a>
+                </dd>
+                <dt>2017-04-17</dt>
+                <dd>
+                  Bugfix: the chunk map was not accurate due to a
+                  wrong calculation of coordinates, reported and
+                  tested by <a
+                  href="https://www.reddit.com/user/TheHuntedBear">TheHuntedBear</a>
+                </dd>
+                <dt>2017-04-16</dt>
+                <dd>Initial release</dd>
+              </dl>
+            </div>
+          </div>
         </div>
-        <div id="changes" class="panel-collapse collapse"
-             aria-labelledby="heading-changes">
-          <div class="panel-body">
-            <dl class="dl-horizontal">
-              <dt>2017-04-18</dt>
-              <dd>
-                New feature: the app now supports touch devices to
-                scroll and scale the map, suggested by <a
-                href="https://www.reddit.com/r/MCPE/comments/65te43/made_a_slime_chunk_finder_for_pe_have_fun/">several
-                Redditters</a>
-              </dd>
-              <dt>2017-04-17</dt>
-              <dd>
-                Bugfix: the chunk map was not accurate due to a wrong
-                calculation of coordinates, reported and tested by
-                TheHuntedBear
-              </dd>
-              <dt>2017-04-16</dt>
-              <dd>Initial release</dd>
-            </dl>
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="heading-credits">
+            <h3 class="panel-title">
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#credits"
+                 aria-expanded="false" aria-controls="credits">
+                Credits <small>(click to show)</small>
+              </a>
+            </h3>
+          </div>
+          <div id="credits" class="panel-collapse collapse" role="tabpanel"
+               aria-labelledby="heading-credits">
+            <div class="panel-body">
+              <dl class="dl-horizontal">
+                <dt><a href="https://mojang.com/">Mojang</a></dt>
+                <dd>for this awesome game.</dd>
+                <dt><a href="http://hammerjs.github.io/">Hammer.js</a> devs</dt>
+                <dd>for their library to support touch devices easily.</dd>
+                <dt><a href="https://baconjs.github.io/">Bacon.js</a> devs</dt>
+                <dd>for their library to do functional reactive programming in JavaScript.</dd>
+                <dt><a href="http://www.typescriptlang.org/">TypeScript</a> devs</dt>
+                <dd>for their decent language for web-app development.</dd>
+              </dl>
+              This application has been developed on <a
+              href="http://netbsd.org/">NetBSD</a>, <a
+              href="https://www.mozilla.org/en-US/firefox/">Firefox</a>,
+              and <a href="https://www.gnu.org/software/emacs/">GNU
+              Emacs</a> and hosted on <a
+              href="https://github.com/">GitHub</a>.
+            </div>
           </div>
         </div>
       </div>
