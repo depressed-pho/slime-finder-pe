@@ -32,7 +32,7 @@ export default class Chunk {
         let mt        = new MersenneTwister(seed);
         let n         = bigInt(mt.random_int());
         let m         = bigInt(0xcccccccd);
-        let product   = bigInt(n).multiply(m);
+        let product   = n.multiply(m);
         let hi        = product.shiftRight(32).and(0xffffffff);
         let hi_shift3 = hi.shiftRight(3).and(0xffffffff);
         let res       = hi_shift3.multiply(4).add(hi_shift3).and(0xffffffff).multiply(2).and(0xffffffff);
