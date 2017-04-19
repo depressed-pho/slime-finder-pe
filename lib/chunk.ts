@@ -1,6 +1,6 @@
 import MersenneTwister = require('mersenne-twister');
-import bigInt          = require('big-integer');
 import Point from 'slime-finder/point';
+import { umul32_lo, umul32_hi } from 'slime-finder/umul32';
 
 export default class Chunk {
     /* Origin of the chunk (normalized, i.e. always multiple of 16 */
@@ -28,14 +28,13 @@ export default class Chunk {
          */
         let x_uint    = (this.origin.x / 16) >>> 0;
         let z_uint    = (this.origin.z / 16) >>> 0;
-        let seed      = bigInt(x_uint).multiply(0x1f1f1f1f).xor(z_uint).and(0xffffffff).valueOf();
+        let seed      = umul32_lo(x_uint, 0x1f1f1f1f) ^ z_uint;
         let mt        = new MersenneTwister(seed);
-        let n         = bigInt(mt.random_int());
-        let m         = bigInt(0xcccccccd);
-        let product   = n.multiply(m);
-        let hi        = product.shiftRight(32).and(0xffffffff);
-        let hi_shift3 = hi.shiftRight(3).and(0xffffffff);
-        let res       = hi_shift3.multiply(4).add(hi_shift3).and(0xffffffff).multiply(2).and(0xffffffff);
-        return n.equals(res);
+        let n         = mt.random_int();
+        let m         = 0xcccccccd;
+        let hi        = umul32_hi(n, m);
+        let hi_shift3 = hi >>> 3;
+        let res       = ((((hi_shift3 + (hi_shift3 * 4)) & 0xffffffff) * 2) & 0xffffffff) >>> 0;
+        return n == res;
     }
 }

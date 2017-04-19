@@ -15,10 +15,12 @@ describe('class Chunk', () => {
         });
     });
     describe('isSlimy', () => {
-        it('should return true for a known slime chunk', () => {
+        it('should return true for a known slime chunks', () => {
+            new Chunk(new Point( -16,  0)).isSlimy.should.equal(true);
             new Chunk(new Point(1744, 48)).isSlimy.should.equal(true);
         });
         it('should return false for a known non-slime chunk', () => {
+            new Chunk(new Point(   0,  0)).isSlimy.should.equal(false);
             new Chunk(new Point(1760, 48)).isSlimy.should.equal(false);
         });
     });

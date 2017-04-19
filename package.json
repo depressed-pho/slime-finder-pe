@@ -22,7 +22,6 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "@types/baconjs": "^0.7.31",
-    "@types/big-integer": "0.0.30",
     "@types/chai": "^3.5.0",
     "@types/hammerjs": "^2.0.34",
     "@types/mocha": "^2.2.40",
@@ -54,7 +53,6 @@
   },
   "dependencies": {
     "baconjs": "^0.7.92",
-    "big-integer": "^1.6.19",
     "bootstrap-sass": "^3.3.7",
     "hammerjs": "^2.0.8",
     "mersenne-twister": "^1.1.0",
