@@ -24,6 +24,7 @@
     "@types/baconjs": "^0.7.31",
     "@types/chai": "^3.5.0",
     "@types/hammerjs": "^2.0.34",
+    "@types/jquery": "^2.0.41",
     "@types/mocha": "^2.2.40",
     "@types/underscore": "^1.8.0",
     "bootstrap-loader": "^2.0.0",
@@ -55,6 +56,7 @@
     "baconjs": "^0.7.92",
     "bootstrap-sass": "^3.3.7",
     "hammerjs": "^2.0.8",
+    "jquery": "^3.2.1",
     "mersenne-twister": "^1.1.0",
     "underscore": "^1.8.3"
   }
