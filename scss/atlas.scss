@@ -1,5 +1,37 @@
+div.atlas-container {
+    position: relative;
+}
+
 canvas#atlas {
     width: 100%;
     height: auto;
     cursor: move;
+}
+
+div.atlas-scale-container {
+    position: absolute;
+
+    padding: 0 5px;
+    margin: 1em 1em;
+}
+
+input[type=range][orient=vertical] {
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+}
+
+input.atlas-scale {
+    width: 8px;
+    height: 125px;
+    max-height: 80%;
+
+    margin: 0.2em auto;
+
+    /* Reverse the direction. The higher the nob is, the smaller the scale
+     * factor is. */
+    -webkit-transform: rotateX(180deg);
+    -moz-transform: rotateX(180deg);
+    -ms-transform: rotateX(180deg);
+    -o-transform: rotateX(180deg);
+    transform: rotateX(180deg);
 }
