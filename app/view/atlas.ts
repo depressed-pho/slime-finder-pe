@@ -111,6 +111,12 @@ export default class AtlasView {
                 this.canvas.width  = sz.w;
                 this.canvas.height = Math.floor(sz.h * (50 / 100));
 
+                /* And recalculate the height of the scale slider. I
+                 * know this should be done solely in the style sheet
+                 * but I can't find a way to do it. I'm a CSS noob. */
+                $('input.atlas-scale').height(
+                    Math.floor($('#atlas').height() * (30 / 100)));
+
                 this.redraw(c, sc);
             });
 
