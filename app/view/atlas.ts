@@ -15,7 +15,12 @@ export default class AtlasView {
      * i.e. pixels */
     protected readonly scale: Bacon.Observable<any, number>;
 
+    /* The canvas to render our atlas. */
     protected readonly canvas: HTMLCanvasElement;
+
+    /* The atlas scale slider is so tightly related to the atlas so
+     * we don't have a separate view for it. */
+    protected readonly scaleSlider: HTMLInputElement;
 
     protected redraw(center: Point, scale: number): void {
         const ctx = this.canvas.getContext("2d");
@@ -89,9 +94,11 @@ export default class AtlasView {
         this.center = atlas.center;
         this.scale  = atlas.scale;
 
-        /* Resize the canvas according to its container.
+        /* Resize the canvas and the scale slider according to its
+         * container.
          */
-        this.canvas = <HTMLCanvasElement>$('#atlas').get(0);
+        this.canvas      = <HTMLCanvasElement>$('.atlas-container canvas.atlas').get(0);
+        this.scaleSlider = <HTMLInputElement>$('.atlas-container input.atlas-scale').get(0);
 
         /* When the size of window changes the canvas should be
          * resized accordingly.
@@ -114,8 +121,8 @@ export default class AtlasView {
                 /* And recalculate the height of the scale slider. I
                  * know this should be done solely in the style sheet
                  * but I can't find a way to do it. I'm a CSS noob. */
-                $('input.atlas-scale').height(
-                    Math.floor($('#atlas').height() * (30 / 100)));
+                $(this.scaleSlider).height(
+                    Math.floor($(this.canvas).height() * (30 / 100)));
 
                 this.redraw(c, sc);
             });
