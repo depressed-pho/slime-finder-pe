@@ -33,10 +33,17 @@ module.exports = {
             { test: /\.(woff2?|svg)$/, loader: 'url-loader?limit=10000' },
             { test: /\.(ttf|eot)$/   , loader: 'file-loader' },
             {
+                test: /\.css$/,
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader?minimize' }
+                ]
+            },
+            {
                 test: /\.scss$/,
                 use: [
                     { loader: 'style-loader' },
-                    { loader: 'css-loader'   },
+                    { loader: 'css-loader?minimize'   },
                     { loader: 'sass-loader'  }
                 ]
             }
