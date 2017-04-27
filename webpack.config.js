@@ -8,6 +8,7 @@ module.exports = {
         filename: '[name].bundle.js',
         sourceMapFilename: '[name].bundle.js.map'
     },
+    devtool: 'source-map',
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
         alias: {
