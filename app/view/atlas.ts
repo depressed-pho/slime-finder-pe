@@ -127,6 +127,23 @@ export default class AtlasView {
                 this.redraw(c, sc);
             });
 
+        /* The current value of the scale slider should be updated
+         * whenever the scale changes.
+         */
+        this.scale.onValue((sc) => {
+            this.scaleSlider.value = String(sc);
+        });
+
+        /* And the scale should be updated whenever the scale slider
+         * changes.
+         */
+        let sliderScale = $(this.scaleSlider)
+            .asEventStream('input')
+            .map((e) => {
+                return () => Number(this.scaleSlider.value);
+            });
+        atlas.scaleChanges.plug(sliderScale);
+
         /* Configurations for mouse and touch devices.
          */
         let hm = new Hammer.Manager(this.canvas, {
@@ -143,12 +160,15 @@ export default class AtlasView {
             .doAction('.preventDefault')
             .debounceImmediate(10)
             .map((e) => {
+                const min  = Number(this.scaleSlider.min);
+                const max  = Number(this.scaleSlider.max);
+                const step = Number(this.scaleSlider.step);
                 return (s0) => {
                     if ((<WheelEvent>e.originalEvent).deltaY > 0) {
-                        return s0 + 0.5;
+                        return Math.min(s0 + step, max);
                     }
                     else {
-                        return Math.max(s0 - 0.5, 1.0);
+                        return Math.max(s0 - step, min);
                     }
                 };
             });
@@ -161,18 +181,23 @@ export default class AtlasView {
         let pinchScale = Bacon.combineAsArray<any, any>(this.scale, pinch)
             .withStateMachine(null, (s0: number | null, ev: Bacon.Event<any>) => {
                 if (ev.hasValue()) {
-                    let [s, jqEvent] = <[number, any]>ev.value();
-                    let domEvent = jqEvent.originalEvent;
-                    let hmEvent  = domEvent.gesture;
+                    const [s, jqEvent] = <[number, any]>ev.value();
+                    const domEvent = jqEvent.originalEvent;
+                    const hmEvent  = domEvent.gesture;
                     switch (domEvent.type) {
                     case 'pinchstart':
                         return [s, []];
 
                     case 'pinch':
                         if (s0) {
-                            let ds = hmEvent.scale;
-                            let s1 = Math.max(Math.round(s0 * ds * 2) / 2, 1.0);
-                            return [s0, [new Bacon.Next(s1)]];
+                            const min  = Number(this.scaleSlider.min);
+                            const max  = Number(this.scaleSlider.max);
+                            const step = Number(this.scaleSlider.step);
+                            const ds   = hmEvent.scale;
+                            const s1   = s0 * ds;
+                            const s1q  = Math.round(s1 * (1 / step)) / step; // quantized
+                            const s1qr = Math.min(Math.max(s1q, min), max);  // restricted
+                            return [s0, [new Bacon.Next(s1qr)]];
                         }
                     }
                 }
