@@ -195,8 +195,8 @@ export default class AtlasView {
                             const step = Number(this.scaleSlider.step);
                             const ds   = hmEvent.scale;
                             const s1   = s0 * ds;
-                            const s1q  = Math.round(s1 * (1 / step)) / step; // quantized
-                            const s1qr = Math.min(Math.max(s1q, min), max);  // restricted
+                            const s1q  = Math.round(s1 * (1 / step)) / (1 / step); // quantized
+                            const s1qr = Math.min(Math.max(s1q, min), max); // restricted
                             return [s0, [new Bacon.Next(s1qr)]];
                         }
                     }
