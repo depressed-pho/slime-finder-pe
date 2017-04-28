@@ -1,8 +1,11 @@
 var path = require('path');
-var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var UglifyJSPlugin    = require('uglifyjs-webpack-plugin');
 
 module.exports = {
-    entry: './app/slime-finder.ts',
+    entry: {
+        'slime-finder': './app/slime-finder.ts'
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].bundle.js',
@@ -16,6 +19,17 @@ module.exports = {
         }
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            inject: 'head',
+            minify: {
+                caseSensitive: true,
+                collapseWhitespace: true,
+                keepClosingSlash: true,
+                removeComments: true
+            },
+            template: 'html/index.html',
+            xhtml: true
+        }),
         new UglifyJSPlugin({
             sourceMap: true
         })
