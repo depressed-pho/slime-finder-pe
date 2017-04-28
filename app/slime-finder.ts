@@ -20,7 +20,14 @@ $(() => {
             return new Point(0, 0);
         }
     })();
-    const initialScale  = 4.0;
+
+    /* If the localStorage contains scale, we use it as the initial
+     * value.
+     */
+    const initialScale  = (() => {
+        let sc = localStorage.getItem('atlas.scale');
+        return sc == null ? 4.0 : Number(sc);
+    })();
 
     const coordsModel   = new CoordsModel(initialCoords);
     const coordsView    = new CoordsView(coordsModel);
@@ -32,5 +39,11 @@ $(() => {
      */
     coordsModel.prop.onValue((p: Point) => {
         window.history.replaceState('', '', `#${p.x},${p.z}`);
+    });
+
+    /* Changes in atlasModel.scale updates the localStorage.
+     */
+    atlasModel.scale.onValue((sc: number) => {
+        localStorage.setItem('atlas.scale', String(sc));
     });
 });
