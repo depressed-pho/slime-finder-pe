@@ -64,6 +64,8 @@ class _Chunk {
         /*! MCPE slime-chunk checker; reverse engineered by @protolambda and @jocopa3
          * Ported by PHO from Java code:
          *   https://gist.github.com/protolambda/00b85bf34a75fd8176342b1ad28bfccc
+         * Simplified by hhhxiao:
+         *   https://github.com/depressed-pho/slime-finder-pe/issues/2
          */
         if (this._isSlimy == null) {
             let x_uint    = (this.origin.x / 16) >>> 0;
@@ -71,11 +73,7 @@ class _Chunk {
             let seed      = umul32_lo(x_uint, 0x1f1f1f1f) ^ z_uint;
             let mt        = new MersenneTwister(seed);
             let n         = mt.random_int();
-            let m         = 0xcccccccd;
-            let hi        = umul32_hi(n, m);
-            let hi_shift3 = hi >>> 3;
-            let res       = ((((hi_shift3 + (hi_shift3 * 4)) & 0xffffffff) * 2) & 0xffffffff) >>> 0;
-            this._isSlimy = (n == res);
+            this._isSlimy = (n % 10 == 0);
         }
         return this._isSlimy;
     }
