@@ -1,12 +1,14 @@
-import $ = require('jquery');
-import Bacon = require('baconjs');
+import * as Bacon from 'baconjs';
 import Point from 'slime-finder/point';
 import Chunk from 'slime-finder/chunk';
 import CoordsModel from '../model/coords';
 
+declare var $: any;
+Bacon.$.init($);
+
 export default class CoordsView {
-    protected readonly changes: Bacon.EventStream<any, (p: Point) => Point>;
-    protected readonly chunk: Bacon.Observable<any, Chunk>;
+    protected readonly changes: Bacon.EventStream<(p: Point) => Point>;
+    protected readonly chunk: Bacon.Observable<Chunk>;
 
     constructor(coords: CoordsModel) {
         /* Whenever users directly change the value of input forms its

@@ -1,9 +1,10 @@
 var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+var TerserWebpackPlugin = require('terser-webpack-plugin');
 
 module.exports = {
+    mode: 'production',
     entry: {
         'slime-finder': './app/slime-finder.ts'
     },
@@ -19,6 +20,18 @@ module.exports = {
             'slime-finder': path.resolve(__dirname, 'lib')
         }
     },
+    optimization: {
+        minimizer: [
+            new TerserWebpackPlugin({
+                sourceMap: true,
+                terserOptions: {
+                    compress: {
+                        warnings: true
+                    }
+                }
+            })
+        ]
+    },
     plugins: [
         new HtmlWebpackPlugin({
             inject: 'head',
@@ -31,24 +44,32 @@ module.exports = {
             template: 'html/index.html',
             xhtml: true
         }),
-        new UglifyJSPlugin({
-            sourceMap: true
+        new webpack.LoaderOptionsPlugin({
+            minimize: true
         }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks: function (module) {
-                // this assumes your vendor imports exist in the node_modules directory
-                return module.context && module.context.indexOf('node_modules') !== -1;
-            }
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery",
+            Tether: "tether",
+            "window.Tether": "tether",
+            Popper: ['popper.js', 'default'],
+            Alert: "exports-loader?Alert!bootstrap/js/dist/alert",
+            Button: "exports-loader?Button!bootstrap/js/dist/button",
+            Carousel: "exports-loader?Carousel!bootstrap/js/dist/carousel",
+            Collapse: "exports-loader?Collapse!bootstrap/js/dist/collapse",
+            Dropdown: "exports-loader?Dropdown!bootstrap/js/dist/dropdown",
+            Modal: "exports-loader?Modal!bootstrap/js/dist/modal",
+            Popover: "exports-loader?Popover!bootstrap/js/dist/popover",
+            Scrollspy: "exports-loader?Scrollspy!bootstrap/js/dist/scrollspy",
+            Tab: "exports-loader?Tab!bootstrap/js/dist/tab",
+            Tooltip: "exports-loader?Tooltip!bootstrap/js/dist/tooltip",
+            Util: "exports-loader?Util!bootstrap/js/dist/util",
         })
     ],
     module: {
         rules: [
             { test: /\.tsx?$/, loader: 'ts-loader' },
-            {
-                test: /bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/,
-                loader: 'imports-loader?jQuery=jquery'
-            },
             {
                 test: /Bacon\.js$/,
                 loader: 'imports-loader?jQuery=jquery'
@@ -59,14 +80,14 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     { loader: 'style-loader' },
-                    { loader: 'css-loader?minimize' }
+                    { loader: 'css-loader' }
                 ]
             },
             {
                 test: /\.scss$/,
                 use: [
                     { loader: 'style-loader' },
-                    { loader: 'css-loader?minimize'   },
+                    { loader: 'css-loader'   },
                     { loader: 'sass-loader'  }
                 ]
             }

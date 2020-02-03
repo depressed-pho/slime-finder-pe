@@ -5,7 +5,7 @@ import { umul32_lo, umul32_hi } from 'slime-finder/umul32';
 
 /* Cache of the actual chunk objects.
  */
-const cache = LRU<_Chunk>(5000);
+const cache = new LRU<string, _Chunk>(5000);
 
 export default class Chunk {
     /* The actual chunk.

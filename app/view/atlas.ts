@@ -1,5 +1,4 @@
 import '../../scss/atlas.scss';
-import $      = require('jquery');
 import Bacon  = require('baconjs');
 import Hammer = require('hammerjs');
 import AtlasModel  from '../model/atlas';
@@ -7,13 +6,16 @@ import CoordsModel from '../model/coords';
 import Chunk       from 'slime-finder/chunk';
 import Point       from 'slime-finder/point';
 
+declare var $: any;
+Bacon.$.init($);
+
 export default class AtlasView {
     /* The center of the atlas in the world coords */
-    protected readonly center: Bacon.Observable<any, Point>;
+    protected readonly center: Bacon.Observable<Point>;
 
     /* How the world coords are scaled to the local coords,
      * i.e. pixels */
-    protected readonly scale: Bacon.Observable<any, number>;
+    protected readonly scale: Bacon.Observable<number>;
 
     /* The canvas to render our atlas. */
     protected readonly canvas: HTMLCanvasElement;
@@ -113,7 +115,7 @@ export default class AtlasView {
         /* The content of atlas is determined by the center, scale,
          * and size. Redraw it whenever either of them changes.
          */
-        Bacon.combineAsArray<any, any>(this.center, this.scale, size).onValues(
+        Bacon.combineAsArray<any>(this.center, this.scale, size).onValues(
             (c, sc, sz) => {
                 this.canvas.width  = sz.w;
                 this.canvas.height = Math.floor(sz.h * (50 / 100));
@@ -155,9 +157,12 @@ export default class AtlasView {
         });
 
         /* Users can pinch or use their mouse wheel to change the scale. */
+        function preventDefault(e: any) {
+            e.preventDefault();
+        }
         let wheelScale = $(this.canvas)
             .asEventStream('wheel')
-            .doAction('.preventDefault')
+            .doAction(preventDefault)
             .debounceImmediate(10)
             .map((e) => {
                 const min  = Number(this.scaleSlider.min);
@@ -174,14 +179,14 @@ export default class AtlasView {
             });
         atlas.scaleChanges.plug(wheelScale);
 
-        let pinchStart = $(this.canvas).asEventStream('pinchstart').doAction('.preventDefault');
-        let pinchMove  = $(this.canvas).asEventStream('pinch').doAction('.preventDefault').debounceImmediate(50);
-        let pinchEnd   = $(this.canvas).asEventStream('pinchend pinchcancel').doAction('.preventDefault');
+        let pinchStart = $(this.canvas).asEventStream('pinchstart').doAction(preventDefault);
+        let pinchMove  = $(this.canvas).asEventStream('pinch').doAction(preventDefault).debounceImmediate(50);
+        let pinchEnd   = $(this.canvas).asEventStream('pinchend pinchcancel').doAction(preventDefault);
         let pinch      = pinchStart.merge(pinchMove).merge(pinchEnd);
-        let pinchScale = Bacon.combineAsArray<any, any>(this.scale, pinch)
-            .withStateMachine(null, (s0: number | null, ev: Bacon.Event<any>) => {
-                if (ev.hasValue()) {
-                    const [s, jqEvent] = <[number, any]>ev.value();
+        let pinchScale = Bacon.combineAsArray<any>(this.scale, pinch)
+            .withStateMachine(null, (s0: number | null, ev: Bacon.Value<any>) => {
+                if (ev.hasValue) {
+                    const [s, jqEvent] = <[number, any]>ev.value;
                     const domEvent = jqEvent.originalEvent;
                     const hmEvent  = domEvent.gesture;
                     switch (domEvent.type) {
@@ -209,14 +214,14 @@ export default class AtlasView {
         atlas.scaleChanges.plug(pinchScale);
 
         /* Users can drag the atlas to scroll it. */
-        let panStart = $(this.canvas).asEventStream('panstart').doAction('.preventDefault');
-        let panMove  = $(this.canvas).asEventStream('pan').doAction('.preventDefault').debounceImmediate(10);
-        let panEnd   = $(this.canvas).asEventStream('panend pancancel').doAction('.preventDefault');
+        let panStart = $(this.canvas).asEventStream('panstart').doAction(preventDefault);
+        let panMove  = $(this.canvas).asEventStream('pan').doAction(preventDefault).debounceImmediate(10);
+        let panEnd   = $(this.canvas).asEventStream('panend pancancel').doAction(preventDefault);
         let pan      = panStart.merge(panMove).merge(panEnd);
-        let centerChanges = Bacon.combineAsArray<any, any>(this.scale, this.center, pan)
-            .withStateMachine(null, (c0: Point | null, ev: Bacon.Event<any>) => {
-                if (ev.hasValue()) {
-                    let [scale, c, jqEvent] = <[number, Point, any]>ev.value();
+        let centerChanges = Bacon.combineAsArray<any>(this.scale, this.center, pan)
+            .withStateMachine(null, (c0: Point | null, ev: Bacon.Value<any>) => {
+                if (ev.hasValue) {
+                    let [scale, c, jqEvent] = <[number, Point, any]>ev.value;
                     let domEvent = jqEvent.originalEvent;
                     let hmEvent  = domEvent.gesture;
                     switch (domEvent.type) {
