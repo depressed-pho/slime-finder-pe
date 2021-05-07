@@ -58,6 +58,6 @@
     "lru-cache": "^5.1.1",
     "mersenne-twister": "^1.1.0",
     "popper.js": "^1.16.1",
-    "underscore": "^1.9.2"
+    "underscore": "^1.12.1"
   }
 }
